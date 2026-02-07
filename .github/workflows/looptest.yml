@@ -2,7 +2,7 @@ name: loop-test
 run-name: loop test
 on:
   workflow_dispatch
-	
+
 jobs:
   get-branches:
     runs-on: ubuntu-22.04
