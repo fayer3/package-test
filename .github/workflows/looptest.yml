@@ -1,0 +1,37 @@
+name: loop-test
+run-name: loop test
+on:
+  workflow_dispatch
+	
+jobs:
+  get-branches:
+    runs-on: ubuntu-22.04
+    outputs:
+      matrix: ${{ steps.branches.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v5
+      - id: branches
+        run: |
+          content=`cat ./branches.json`
+          # the following lines are only required for multi line json
+          content="${content//'%'/'%25'}"
+          content="${content//$'\n'/'%0A'}"
+          content="${content//$'\r'/'%0D'}"
+          # end of optional handling for multi line json
+          echo $content >> $GITHUB_OUTPUT
+  
+  process-branches:
+    runs-on: ubuntu-22.04
+    needs: get-branches
+    strategy:
+      max-parallel: 1
+      matrix:
+        branch: ${{ fromJSON(needs.get-branches.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ matrix.branch }}
+      - name: print number
+        run: |
+          content=`cat ./number.txt`
+          echo $content
