@@ -17,7 +17,7 @@ jobs:
           content="${content//$'\n'/''}"
           content="${content//$'\r'/''}"
           # end of optional handling for multi line json
-          echo $content >> $GITHUB_OUTPUT
+          echo matrix=$content >> $GITHUB_OUTPUT
   
   process-branches:
     runs-on: ubuntu-22.04
